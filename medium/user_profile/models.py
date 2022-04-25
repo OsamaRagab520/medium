@@ -4,6 +4,8 @@ from PIL import Image
 from io import BytesIO
 from django.core.files import File
 from django.core.files.base import ContentFile
+from django.contrib.auth import get_user_model
+
 
 def profile_pic_url(instance, filename):
     return f'profile_images/{instance.user}/{filename}'
@@ -11,6 +13,7 @@ def profile_pic_url(instance, filename):
 def header_pic_url(instance, filename):
     return f'header_images/{instance.user}/{filename}'
 
+User = get_user_model()
 
 class ResizeImageMixin(models.Model):
     created_at = models.DateTimeFieldField(auto_now_add = True)
@@ -38,6 +41,7 @@ class Profile(ResizeImageMixin):
         ("#000000", "BLACK"),
         ("#FFFFFF", "WHITE")
     )
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     short_bio = models.CharField(max_length=255)
     about_page_url = models.TextField()
     profile_pic_url = models.ImageField(upload_to=profile_pic_url)
