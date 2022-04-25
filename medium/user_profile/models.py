@@ -42,7 +42,7 @@ class Profile(ResizeImageMixin):
         ("#FFFFFF", "WHITE")
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    short_bio = models.CharField(max_length=255)
+    bio = models.CharField(max_length=255, default='no bio')
     about_page_url = models.TextField()
     profile_pic_url = models.ImageField(upload_to=profile_pic_url)
     profile_views = models.IntegerField(default=0)
@@ -53,6 +53,9 @@ class Profile(ResizeImageMixin):
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name}'
 
+    class Meta:
+        verbose_name = ('User Profile')
+    
     def save(self, *args, **kwargs):
         self.resize(self.profile_pic_url, (200, 200))
         self.resize(self.header_pic_url, (200, 200))
