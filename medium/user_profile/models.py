@@ -16,8 +16,8 @@ def header_pic_url(instance, filename):
 User = get_user_model()
 
 class ResizeImageMixin(models.Model):
-    created_at = models.DateTimeFieldField(auto_now_add = True)
-    updated_at = models.DateTimeFieldField(auto_now = True)
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
 
     def resize(self, imageField: models.ImageField, size:tuple):
         im = Image.open(imageField)
