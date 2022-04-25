@@ -2,7 +2,8 @@ import unittest
 from datetime import datetime, timezone
 
 from rest_framework import serializers
-from styleguide_example.common.utils import inline_serializer, make_mock_object
+
+from medium.common.utils import inline_serializer, make_mock_object
 
 
 class InlineSerializerTests(unittest.TestCase):

@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock
 
-from styleguide_example.common.services import model_update
+from medium.common.services import model_update
 
 
 class ModelUpdateTests(unittest.TestCase):

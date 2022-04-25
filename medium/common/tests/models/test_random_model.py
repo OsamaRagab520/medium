@@ -3,7 +3,8 @@ from datetime import timedelta
 from django.db.utils import IntegrityError
 from django.test import TestCase
 from django.utils import timezone
-from styleguide_example.common.models import RandomModel
+
+from medium.common.models import RandomModel
 
 
 class RandomModelTests(TestCase):
