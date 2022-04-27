@@ -11,11 +11,7 @@ from django.urls import reverse
 from medium.users.forms import UserAdminChangeForm
 from medium.users.models import User
 from medium.users.tests.factories import UserFactory
-from medium.users.views import (
-    UserRedirectView,
-    UserUpdateView,
-    user_detail_view,
-)
+from medium.users.views import UserRedirectView, UserUpdateView, user_detail_view
 
 pytestmark = pytest.mark.django_db
 

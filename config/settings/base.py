@@ -81,7 +81,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "medium.users",
     "medium.profiles",
-    # Your stuff: custom apps go here
+    "medium.common"
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
