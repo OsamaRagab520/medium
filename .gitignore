@@ -278,3 +278,5 @@ medium/media/
 .env
 .envs/*
 !.envs/.local/
+
+Pipfile
