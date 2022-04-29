@@ -24,6 +24,10 @@ makemigrations:
 migrate:
 	docker-compose -f local.yml run --rm django python manage.py migrate $(filter-out $@,$(MAKECMDGOALS))
 
+superuser:
+	docker-compose -f local.yml run --rm django python manage.py createsup $(filter-out $@,$(MAKECMDGOALS))
+
+
 makemessages:
 	docker-compose -f local.yml run --rm django python manage.py makemessages --no-location -l ar
 
