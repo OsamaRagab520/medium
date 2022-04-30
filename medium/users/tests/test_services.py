@@ -1,7 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from users.models import User
-from users.services import UserService
+
+from medium.users.models import User
+from medium.users.services import UserService
 
 
 class UserServiceTestCase(TestCase):
