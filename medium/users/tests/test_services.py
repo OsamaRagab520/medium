@@ -1,4 +1,3 @@
-from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from medium.users.models import User
@@ -16,12 +15,12 @@ class UserServiceTestCase(TestCase):
     def test_create_user_without_email(self):
         data: dict = {"name": "Hazem", "password": "123"}
         service: UserService = UserService()
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(Exception):
             service.create_user(data)
 
     def test_create_user_with_already_exist_email(self):
         data: dict = {"name": "Hazem", "email": "user1@medium.com", "password": "123"}
         service: UserService = UserService()
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(Exception):
             service.create_user(data)
             service.create_user(data)
