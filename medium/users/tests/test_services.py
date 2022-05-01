@@ -28,6 +28,19 @@ class UserServiceTestCase(TestCase):
                 name="Hazem", email="user1@medium.com", password="Tt123456789huehw"
             )
 
+    def test_create_user_with_invalid_email(self):
+        service: UserService = UserService()
+        with self.assertRaises(Exception):
+            service.create_user(
+                name="Hazem", email="user1", password="Tt123456789huehw"
+            )
+            service.create_user(
+                name="Hazem", email="user1@medium", password="Tt123456789huehw"
+            )
+            service.create_user(
+                name="Hazem", email="user1medium.com", password="Tt123456789huehw"
+            )
+
     def test_create_user_with_weak_password(self):
         service: UserService = UserService()
         with self.assertRaises(Exception):

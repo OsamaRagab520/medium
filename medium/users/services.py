@@ -1,12 +1,16 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password
+from django.core.validators import validate_email
 
 from medium.users.models import User
 
 
 class UserService:
     def create_user(self, name: str, email: str, password: str) -> User:
-        user: User = User(name=name, email=email)
+        user: User = User(name=name)
+        validate_email(email)
+        user.email = email
+
         validate_password(password, user)
         hashed_password: str = make_password(password)
         user.password = hashed_password
@@ -20,8 +24,11 @@ class UserService:
         user: User = User.objects.get(pk=id)
         if name:
             user.name = name
+
         if email:
+            validate_email(email)
             user.email = email
+
         if password:
             validate_password(password, user)
             hashed_password: str = make_password(password)
