@@ -9,7 +9,9 @@ from medium.users.models import User
 
 
 class UserService:
-    def create_user(self, username: str, name: str, email: str, password: str) -> User:
+    def create_user(
+        self, username: str, name: str, email: str, password: str, **other_fields
+    ) -> User:
         username = User.normalize_username(username)
         email = BaseUserManager.normalize_email(email)
 
@@ -19,6 +21,9 @@ class UserService:
 
         validate_password(password, user)
         user.password = make_password(password)
+
+        for field in other_fields:
+            setattr(user, field, other_fields[field])
 
         user.save()
         return user
