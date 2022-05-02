@@ -1,4 +1,7 @@
+from typing import Any, Dict
+
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import validate_email
 
@@ -6,33 +9,36 @@ from medium.users.models import User
 
 
 class UserService:
-    def create_user(self, name: str, email: str, password: str) -> User:
-        user: User = User(name=name)
+    def create_user(self, username: str, name: str, email: str, password: str) -> User:
+        username = User.normalize_username(username)
+        email = BaseUserManager.normalize_email(email)
+
         validate_email(email)
-        user.email = email
+
+        user: User = User(username=username, name=name, email=email)
 
         validate_password(password, user)
-        hashed_password: str = make_password(password)
-        user.password = hashed_password
+        user.password = make_password(password)
 
         user.save()
         return user
 
-    def update_user(
-        self, id: int, name: str = None, email: str = None, password: str = None
-    ) -> User:
+    def update_user(self, id: int, data: Dict[str, Any]) -> User:
         user: User = User.objects.get(pk=id)
-        if name:
-            user.name = name
 
-        if email:
-            validate_email(email)
-            user.email = email
+        for field in data:
+            if field == "password":
+                continue
 
+            if field == "email":
+                validate_email(data.get(field))
+
+            setattr(user, field, data.get(field))
+
+        password: str = data.get("password")
         if password:
             validate_password(password, user)
-            hashed_password: str = make_password(password)
-            user.password = hashed_password
+            user.password = make_password(password)
 
         user.save()
         return user
