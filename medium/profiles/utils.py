@@ -7,11 +7,11 @@ from django.db import models
 from PIL import Image
 
 
-def profile_pic_url(instance, filename):
+def get_profile_pic_url(instance, filename):
     return f"profile_images/{instance.user}/{filename}"
 
 
-def header_pic_url(instance, filename):
+def get_header_pic_url(instance, filename):
     return f"header_images/{instance.user}/{filename}"
 
 
