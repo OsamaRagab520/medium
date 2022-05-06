@@ -14,8 +14,7 @@ class ProfileServiceTestCase(TestCase):
             email="test_user@dummy.com",
             password="Test_pass123!",
         )
-        self.test_img_url = """https://cdn.dribbble.com/users/278089/screenshots/1
-            4822259/media/4dd328a4a29049e3c67f0a55184a4633.jpeg?compress=1&resize=400x300"""
+        self.test_img_url = "https://bit.ly/3vQgl0t"
         self.img = request.urlretrieve(self.test_img_url)[0]
         self.service = ProfileService(
             self.user.id, File(open(self.img, "rb")), File(open(self.img, "rb"))
@@ -35,24 +34,6 @@ class ProfileServiceTestCase(TestCase):
         self.assertEqual(profile.profile_views, 0)
         self.assertEqual(profile.accent_color, "#FFFFFF")
         self.assertEqual(profile.background_color, "#FFFFFF")
-
-    def test_create_profile_with_invalid_data(self):
-        with self.assertRaises(Exception):
-            self.service.create_profile(
-                about_text=1,
-                short_bio="test_short_bio",
-            )
-
-    def test_create_profile_with_same_user_id(self):
-        self.service.create_profile(
-            about_text="test_about_text",
-            short_bio="test_short_bio",
-        )
-        with self.assertRaises(Exception):
-            self.service.create_profile(
-                about_text="test_about_text",
-                short_bio="test_short_bio",
-            )
 
     def test_update_profile(self):
         profile = self.service.create_profile(
@@ -77,7 +58,6 @@ class ProfileServiceTestCase(TestCase):
         with self.assertRaises(Exception):
             self.service.update_profile(
                 data={
-                    "about_text": 42,
-                    "short_bio": 42,
+                    "profile_views": "Nan",
                 }
             )
