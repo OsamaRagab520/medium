@@ -1,6 +1,6 @@
 from urllib import request
 
-from djagno.core.files import File
+from django.core.files import File
 from django.test import TestCase
 
 from medium.profiles.services import ProfileService
