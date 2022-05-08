@@ -79,10 +79,8 @@ class ProfileServiceTestCase(TestCase):
         )
         profile = self.service.update_profile(
             self.user.id,
-            data={
-                "about_text": "test_about_text_updated",
-                "short_bio": "test_short_bio_updated",
-            },
+            about_text="test_about_text_updated",
+            short_bio="test_short_bio_updated",
         )
 
         self.assertEqual(profile.about_text, "test_about_text_updated")
@@ -92,10 +90,7 @@ class ProfileServiceTestCase(TestCase):
         with self.assertRaises(Exception):
             self.service.update_profile(
                 self.non_existent_user_id,
-                data={
-                    "about_text": "test_about_text_updated",
-                    "short_bio": "test_short_bio_updated",
-                },
+                about_text="test_about_text",
             )
 
     def test_update_profile_with_invalid_data(self):
@@ -108,7 +103,6 @@ class ProfileServiceTestCase(TestCase):
         )
         with self.assertRaises(Exception):
             self.service.update_profile(
-                data={
-                    "profile_views": "Nan",
-                }
+                self.user.id,
+                profile_views="Nan",
             )

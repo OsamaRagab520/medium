@@ -1,4 +1,4 @@
-from typing import Any, BinaryIO, Dict, Optional
+from typing import BinaryIO, Optional
 
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework.exceptions import ValidationError as DRFValidationError
@@ -51,17 +51,38 @@ class ProfileService:
         except DjangoValidationError as e:
             raise DRFValidationError(e.messages)
 
-    def update_profile(self, user_id: int, data: Dict[str, Any]) -> Profile:
+    def update_profile(
+        self,
+        user_id: int,
+        about_text: Optional[str] = None,
+        profile_pic: Optional[BinaryIO] = None,
+        header_pic: Optional[BinaryIO] = None,
+        profile_views: Optional[int] = None,
+        short_bio: Optional[str] = None,
+        accent_color: Optional[str] = None,
+        background_color: Optional[str] = None,
+    ) -> Profile:
         try:
             profile = Profile.objects.get(user_id=user_id)
         except Profile.DoesNotExist:
             raise DRFValidationError(
                 {"user": f"User {self.user_id} does not have a profile"}
             )
-
         try:
-            for field in data:
-                setattr(profile, field, data[field])
+            if about_text:
+                profile.about_text = about_text
+            if profile_pic:
+                profile.profile_pic = profile_pic
+            if header_pic:
+                profile.header_pic = header_pic
+            if profile_views:
+                profile.profile_views = profile_views
+            if short_bio:
+                profile.short_bio = short_bio
+            if accent_color:
+                profile.accent_color = accent_color
+            if background_color:
+                profile.background_color = background_color
 
             profile.full_clean()
             profile.save()
