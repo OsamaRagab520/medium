@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from medium.api.permissions import IsOwner
-from medium.users.models import User
 from medium.users.selectors import get_user
 from medium.users.services import UserService
 
@@ -29,20 +28,24 @@ class CreateUserApi(APIView):
 
 
 class DetailUserApi(APIView):
+    # TODO Remove when JWT authentication is implemented
+    permission_classes = [AllowAny]
+
     class OutputSerializer(serializers.Serializer):
         username = serializers.CharField()
         name = serializers.CharField()
         email = serializers.EmailField()
 
     def get(self, request, user_id):
-        user = get_user(User, id=user_id)
+        user = get_user(user_id)
         serializer = self.OutputSerializer(user)
         return Response(serializer.data)
 
 
 class UpdateUserApi(APIView):
 
-    permission_classes = [IsOwner]
+    # TODO Remove AllowAny when JWT authentication is implemented
+    permission_classes = [IsOwner, AllowAny]
 
     class InputSerializer(serializers.Serializer):
         name = serializers.CharField(required=False)
