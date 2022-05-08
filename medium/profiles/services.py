@@ -14,7 +14,10 @@ class ProfileService:
         about_text: str,
         profile_pic: BinaryIO,
         header_pic: BinaryIO,
-        **optional_fields: Optional[Dict[str, Any]],
+        profile_views: Optional[int] = None,
+        short_bio: Optional[str] = None,
+        accent_color: Optional[str] = None,
+        background_color: Optional[str] = None,
     ) -> Profile:
         try:
             user: User = User.objects.get(id=user_id)
@@ -32,8 +35,14 @@ class ProfileService:
                 header_pic=header_pic,
             )
 
-            for field in optional_fields:
-                setattr(profile, field, optional_fields[field])
+            if profile_views:
+                profile.profile_views = profile_views
+            if short_bio:
+                profile.short_bio = short_bio
+            if accent_color:
+                profile.accent_color = accent_color
+            if background_color:
+                profile.background_color = background_color
 
             profile.full_clean()
             profile.save()
