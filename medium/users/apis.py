@@ -3,7 +3,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from medium.api.permissions import IsOwner
+# from medium.api.permissions import IsOwner
 from medium.users.selectors import get_user
 from medium.users.services import UserService
 
@@ -44,12 +44,14 @@ class DetailUserApi(APIView):
 
 class UpdateUserApi(APIView):
 
-    # TODO Remove AllowAny when JWT authentication is implemented
-    permission_classes = [IsOwner, AllowAny]
+    # TODO Remove AllowAny and activate IsOwner when JWT authentication is implemented
+    permission_classes = [AllowAny]
+    # permission_classes = [IsOwner]
 
     class InputSerializer(serializers.Serializer):
         name = serializers.CharField(required=False)
         email = serializers.EmailField(required=False)
+        password = serializers.CharField(required=False)
 
     def post(self, request, user_id):
         serializer = self.InputSerializer(data=request.data)
