@@ -3,29 +3,33 @@ from typing import Any, BinaryIO, Dict, Optional
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework.exceptions import ValidationError as DRFValidationError
 
-from medium.common.services import model_update
 from medium.profiles.models import Profile
 from medium.users.models import User
 
 
 class ProfileService:
-    def __init__(self, user_id: int, profile_pic: BinaryIO, header_pic: BinaryIO):
-        self.user_id = user_id
-        self.profile_pic = profile_pic
-        self.header_pic = header_pic
-
     def create_profile(
         self,
+        user_id: int,
         about_text: str,
+        profile_pic: BinaryIO,
+        header_pic: BinaryIO,
         **optional_fields: Optional[Dict[str, Any]],
     ) -> Profile:
         try:
-            user: User = User.objects.get(id=self.user_id)
+            user: User = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            raise DRFValidationError({"user": f"User {user_id} does not exist"})
+
+        if Profile.objects.filter(user_id=user_id).exists():
+            raise DRFValidationError({"user": f"User {user_id} already has a profile"})
+
+        try:
             profile = Profile(
                 user=user,
                 about_text=about_text,
-                profile_pic=self.profile_pic,
-                header_pic=self.header_pic,
+                profile_pic=profile_pic,
+                header_pic=header_pic,
             )
 
             for field in optional_fields:
@@ -38,27 +42,21 @@ class ProfileService:
         except DjangoValidationError as e:
             raise DRFValidationError(e.messages)
 
-    def update_profile(self, data: Dict[str, Any]) -> Profile:
+    def update_profile(self, user_id: int, data: Dict[str, Any]) -> Profile:
         try:
-            profile = Profile.objects.get(user_id=self.user_id)
-            profile_fields = [
-                "short_bio",
-                "about_text",
-                "profile_pic",
-                "profile_views",
-                "accent_color",
-                "background_color",
-                "header_pic",
-            ]
-
-            for field in ["profile_pic", "header_pic"]:
-                if field in data:
-                    setattr(self, field, data[field])
-
-            new_profile, _ = model_update(
-                instance=profile, fields=profile_fields, data=data
+            profile = Profile.objects.get(user_id=user_id)
+        except Profile.DoesNotExist:
+            raise DRFValidationError(
+                {"user": f"User {self.user_id} does not have a profile"}
             )
-            return new_profile
+
+        try:
+            for field in data:
+                setattr(profile, field, data[field])
+
+            profile.full_clean()
+            profile.save()
+            return profile
 
         except DjangoValidationError as e:
             raise DRFValidationError(e.messages)
