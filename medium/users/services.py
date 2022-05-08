@@ -14,50 +14,45 @@ class UserService:
     def create_user(
         self, username: str, name: str, email: str, password: str, **other_fields
     ) -> User:
-        username = User.normalize_username(username)
-        email = BaseUserManager.normalize_email(email)
-
         try:
+            username = User.normalize_username(username)
+            email = BaseUserManager.normalize_email(email)
             validate_email(email)
-        except DjValidationError as e:
-            raise ValidationError(e.messages)
 
-        user: User = User(username=username, name=name, email=email)
+            user: User = User(username=username, name=name, email=email)
 
-        try:
             validate_password(password, user)
-        except DjValidationError as e:
-            raise ValidationError(e.messages)
-        user.password = make_password(password)
-
-        for field in other_fields:
-            setattr(user, field, other_fields[field])
-
-        user.save()
-        return user
-
-    def update_user(self, id: int, data: Dict[str, Any]) -> User:
-        user: User = User.objects.get(pk=id)
-
-        for field in data:
-            if field == "password":
-                continue
-
-            if field == "email":
-                try:
-                    validate_email(data.get(field))
-                except DjValidationError as e:
-                    raise ValidationError(e.messages)
-
-            setattr(user, field, data.get(field))
-
-        password: str = data.get("password")
-        if password:
-            try:
-                validate_password(password, user)
-            except DjValidationError as e:
-                raise ValidationError(e.messages)
             user.password = make_password(password)
 
-        user.save()
-        return user
+            for field in other_fields:
+                setattr(user, field, other_fields[field])
+
+            user.save()
+            return user
+
+        except DjValidationError as e:
+            raise ValidationError(e.messages)
+
+    def update_user(self, id: int, data: Dict[str, Any]) -> User:
+        try:
+            user: User = User.objects.get(pk=id)
+
+            for field in data:
+                if field == "password":
+                    continue
+
+                if field == "email":
+                    validate_email(data.get(field))
+
+                setattr(user, field, data.get(field))
+
+            password: str = data.get("password")
+            if password:
+                validate_password(password, user)
+                user.password = make_password(password)
+
+            user.save()
+            return user
+
+        except DjValidationError as e:
+            raise ValidationError(e.messages)
