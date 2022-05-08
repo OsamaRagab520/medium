@@ -54,7 +54,7 @@ class UpdateUserApi(APIView):
 
         service = UserService()
         service.update_user(
-            id=user_id,
+            user_id=user_id,
             data=serializer.validated_data,
         )
         return Response(status=status.HTTP_200_OK)
