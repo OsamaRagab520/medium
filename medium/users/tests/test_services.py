@@ -107,13 +107,10 @@ class UserServiceTestCase(TestCase):
             email="user1@medium.com",
             password="Tt123456789huehw",
         )
-        updated_user: User = service.update_user(user.pk, {"name": "Hazem Essam"})
+        updated_user: User = service.update_user(
+            user=user, fetched_by=user, data={"name": "Hazem Essam"}
+        )
         self.assertEqual(updated_user.name, "Hazem Essam")
-
-    def test_update_unexisting_user(self):
-        service: UserService = UserService()
-        with self.assertRaises(Exception):
-            service.update_user(1000, {"name": "Hazem Essam"})
 
     def test_update_user_with_weak_password(self):
         service: UserService = UserService()
@@ -124,7 +121,7 @@ class UserServiceTestCase(TestCase):
             password="Tt123456789huehw",
         )
         with self.assertRaises(Exception):
-            service.update_user(user.pk, {"password": "1234"})
+            service.update_user(user=user, fetched_by=user, data={"password": "1234"})
 
     def test_update_user_with_already_existing_username(self):
         service: UserService = UserService()
@@ -141,4 +138,6 @@ class UserServiceTestCase(TestCase):
             password="Tt123456789huehw",
         )
         with self.assertRaises(Exception):
-            service.update_user(user, user, {"username": "hazemessam2"})
+            service.update_user(
+                user=user, fetched_by=user, data={"username": "hazemessam2"}
+            )

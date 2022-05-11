@@ -10,7 +10,9 @@ from medium.users.models import User
 
 
 class UserService:
-    def create_user(self, username: str, name: str, email: str, password: str) -> User:
+    def create_user(
+        self, *, username: str, name: str, email: str, password: str
+    ) -> User:
 
         # Pack user data for validation
         user: User = User(username=username, name=name, email=email)
@@ -29,7 +31,7 @@ class UserService:
 
         return user
 
-    def update_user(self, user: User, fetched_by: User, data: Dict) -> User:
+    def update_user(self, *, user: User, fetched_by: User, data: Dict) -> User:
 
         # TODO Activate when authentication is implemented
         # if user != fetched_by:
@@ -37,7 +39,7 @@ class UserService:
 
         # Update non side effect fields
         # TODO Remove email field when email confirmation is implemented
-        non_side_effect_fields = ["email", "name"]
+        non_side_effect_fields = ["username", "email", "name"]
 
         user, _ = model_update(
             instance=user,
