@@ -15,10 +15,10 @@ def test_user_detail(user: User):
 
 
 def test_user_create():
-    assert reverse("api:users:create_user") == "/api/users/me/"
-    assert resolve("/api/users/me/").view_name == "api:users:create_user"
+    assert reverse("api:users:create_user") == "/api/users/create/"
+    assert resolve("/api/users/create/").view_name == "api:users:create_user"
 
 
-def test_user_update():
-    assert reverse("api:users:update_user") == "/api/users/me/"
-    assert resolve("/api/users/me/").view_name == "api:users:update_user"
+def test_user_update(user: User):
+    assert reverse("api:users:update_user") == f"/api/users/{user.pk}/update"
+    assert resolve(f"/api/users/{user.pk}/update").view_name == "api:users:update_user"
