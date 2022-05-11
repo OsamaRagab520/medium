@@ -5,7 +5,8 @@ from django.contrib.auth.password_validation import validate_password
 
 from medium.common.services import model_update
 from medium.users.models import User
-from medium.users.selectors import get_user
+
+# from django.core.exceptions import PermissionDenied
 
 
 class UserService:
@@ -28,10 +29,11 @@ class UserService:
 
         return user
 
-    def update_user(self, user_id: int, data: Dict) -> User:
+    def update_user(self, user: User, fetched_by: User, data: Dict) -> User:
 
-        # Fetch user instance
-        user: User = get_user(user_id)
+        # TODO Activate when authentication is implemented
+        # if user != fetched_by:
+        #     raise PermissionDenied()
 
         # Update non side effect fields
         # TODO Remove email field when email confirmation is implemented

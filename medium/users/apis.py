@@ -44,9 +44,8 @@ class DetailUserApi(APIView):
 
 class UpdateUserApi(APIView):
 
-    # TODO Remove AllowAny and activate IsOwner when JWT authentication is implemented
+    # TODO Remove when JWT authentication is implemented
     permission_classes = [AllowAny]
-    # permission_classes = [IsOwner]
 
     class InputSerializer(serializers.Serializer):
         name = serializers.CharField(required=False)
@@ -56,10 +55,12 @@ class UpdateUserApi(APIView):
     def post(self, request, user_id):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        user = get_user(user_id)
 
         service = UserService()
         service.update_user(
-            user_id=user_id,
+            user=user,
+            fetched_by=request.user,
             data=serializer.validated_data,
         )
         return Response(status=status.HTTP_200_OK)
