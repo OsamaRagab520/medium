@@ -48,6 +48,7 @@ class UpdateUserApi(APIView):
     permission_classes = [AllowAny]
 
     class InputSerializer(serializers.Serializer):
+        username = serializers.CharField(required=False)
         name = serializers.CharField(required=False)
         email = serializers.EmailField(required=False)
         password = serializers.CharField(required=False)
