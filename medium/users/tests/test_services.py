@@ -141,4 +141,4 @@ class UserServiceTestCase(TestCase):
             password="Tt123456789huehw",
         )
         with self.assertRaises(Exception):
-            service.update_user(user, {"username": "hazemessam2"})
+            service.update_user(user, user, {"username": "hazemessam2"})
